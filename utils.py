@@ -53,13 +53,19 @@ def open_template(template_path):
         return template
 
 # Create a message for an email. returns an object contaianing base64url encoded email objects.
-def create_message(senders, receivers, subject, template):
-    message = MIMEMultipart()
-    message['senders'] = senders
-    message['receivers'] = receivers
+def create_message(sender, receiver, subject, html, text):
+    message = MIMEMultipart('alternative')
+    message['sender'] = sender
+    message['receiver'] = receiver
     message['subject'] = subject
-    msg = MIMEText(template, 'html')
-    print(msg)
-    # message.attach(msg)
-    # print(message.as_string())
-    # return {'raw': urlsafe_b64encode(message.as_string())}
+
+    plain_msg_body = MIMEText(text, 'plain')
+    html_msg_body = MIMEText(html, 'html')
+
+    message.attach(plain_msg_body)
+    message.attach(html_msg_body)
+
+    print(message.as_string())
+
+    # 1.2 and encode it as a base64url string.
+    return {'raw': urlsafe_b64encode(message)}
