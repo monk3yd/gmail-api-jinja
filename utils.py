@@ -7,6 +7,17 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
+# for encoding/decoding messages in base64
+from base64 import urlsafe_b64decode, urlsafe_b64encode
+
+# for dealing with attachement MIME types
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.mime.image import MIMEImage
+from email.mime.audio import MIMEAudio
+from email.mime.base import MIMEBase
+from mimetypes import guess_type as guess_mime_type
+
 # If modifying these scopes, delete the file token.json.
 SCOPES = [
     'https://www.googleapis.com/auth/gmail.readonly',
@@ -39,5 +50,16 @@ def gmail_authenticate():
 def open_template(template_path):
     with open(template_path, "r") as file:
         template = file.read()
-        print(template)
         return template
+
+# Create a message for an email. returns an object contaianing base64url encoded email objects.
+def create_message(senders, receivers, subject, template):
+    message = MIMEMultipart()
+    message['senders'] = senders
+    message['receivers'] = receivers
+    message['subject'] = subject
+    msg = MIMEText(template, 'html')
+    print(msg)
+    # message.attach(msg)
+    # print(message.as_string())
+    # return {'raw': urlsafe_b64encode(message.as_string())}
