@@ -13,10 +13,10 @@ from base64 import urlsafe_b64decode, urlsafe_b64encode
 # for dealing with attachement MIME types
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from email.mime.image import MIMEImage
-from email.mime.audio import MIMEAudio
+# from email.mime.image import MIMEImage
+# from email.mime.audio import MIMEAudio
 from email.mime.base import MIMEBase
-from mimetypes import guess_type as guess_mime_type
+# from mimetypes import guess_type as guess_mime_type
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = [
@@ -68,4 +68,4 @@ def create_message(sender, receiver, subject, html, text):
     print(message.as_string())
 
     # 1.2 and encode it as a base64url string.
-    return {'raw': urlsafe_b64encode(message)}
+    return {'raw': urlsafe_b64encode(message.as_string().encode())}

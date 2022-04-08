@@ -4,8 +4,8 @@ from __future__ import print_function
 from pathlib import Path
 
 # Own
-from email import Email
-from utils import gmail_authenticate, open_template, create_message
+from gmail import Email
+from utils import open_template
 
 
 def main():
@@ -15,18 +15,16 @@ def main():
     receiver = 'monk3yd.thelab@yahoo.com'
     subject = 'Urgente'
 
-    template_path = Path("templates/template.html")
-    template = open_template(template_path)
+    template = open_template(Path("templates/template.html"))
 
     # parameters = {
     #         'name': 'John Doe',
     #         'rut': '13.411.831-0',
     #     }
 
-    version_no_html_path = Path("templates/template.txt") 
-    no_html_template = open_template(version_no_html_path)
+    no_html_template = open_template(Path("templates/template.txt"))
 
-    google_tracker = {}  # https://htmlemail.io/blog/google-analytics-email-tracking
+    # google_tracker = {}  # https://htmlemail.io/blog/google-analytics-email-tracking
        
 
     # 2.1 Create a new message resource
@@ -38,7 +36,7 @@ def main():
         template=template,  # str()
         # parameters=parameters,  # dict()
         no_html_template=no_html_template,  # str()
-        google_tracker=google_tracker  # dict()  
+        # google_tracker=google_tracker  # dict()  
     )
 
     # print(new_email)
