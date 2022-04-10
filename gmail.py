@@ -1,3 +1,4 @@
+from jinja2 import Template
 from utils import gmail_authenticate, create_message, send_message
 
 class Email():
@@ -12,25 +13,19 @@ class Email():
         self.no_html_template = no_html_template
         self.google_tracker = google_tracker
 
+        # Templating with params
+        name = self.parameters['name']
+        age = str(self.parameters['age'])
+
+        tm = Template(self.html_template)
+        html = tm.render(name=name, age=age)
+
         # Call the Gmail API
         self.service = gmail_authenticate()
 
         # Create message
-        self.encoded_message = create_message(self.sender, self.receiver, self.subject, self.html_template, self.no_html_template) 
+        self.encoded_message = create_message(self.sender, self.receiver, self.subject, html, self.no_html_template) 
 
     # Send message
     def send(self):
         send_message(self.service, 'me', self.encoded_message) 
-                
-
-# The high-level workflow to send an email is to:
-    # 1.1 Create the email content
-
-    # 1.2 and encode it as a base64url string.
-
-    # 2.1 Create a new message resource
-
-    # 2.2 and set its raw property to the base64url string you just created.
-
-    # 3. Call messages.send, or, if sending a draft, drafts.send to send the message.
- 

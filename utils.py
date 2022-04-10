@@ -73,3 +73,15 @@ def send_message(service, user_id, message):
         # (developer) - Handle errors from gmail API.
         print(f'An error occurred: {error}')
         return "Error"
+
+# The high-level workflow to send an email is to:
+    # 1.1 Create the email content
+
+    # 1.2 and encode it as a base64url string.
+
+    # 2.1 Create a new message resource
+
+    # 2.2 and set its raw property to the base64url string you just created.
+
+    # 3. Call messages.send, or, if sending a draft, drafts.send to send the message.
+ 

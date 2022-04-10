@@ -14,10 +14,10 @@ def main():
     receiver = 'monk3yd.thelab@yahoo.com'
     subject = 'Urgente'
     html_template = open_template(Path("templates/template.html"))
-    # parameters = {
-    #         'name': 'John Doe',
-    #         'rut': '13.411.831-0',
-    #     }
+    parameters = {
+            'name': 'John Doe',
+            'age': 28,
+        }
     no_html_template = open_template(Path("templates/template.txt"))
     # google_tracker = {}  # https://htmlemail.io/blog/google-analytics-email-tracking
        
@@ -28,7 +28,7 @@ def main():
         receiver=receiver,  # list()
         subject=subject,  # str()
         html_template=html_template,  # str()
-        # parameters=parameters,  # dict()
+        parameters=parameters,  # dict()
         no_html_template=no_html_template,  # str()
         # google_tracker=google_tracker  # dict()  
     )
