@@ -11,28 +11,28 @@ from utils import open_template
 def main():
     # Email content
     sender = 'monk3yd.thelab@gmail.com'
-    receiver = 'monk3yd.thelab@yahoo.com'
-    subject = 'Urgente'
-    html_template = open_template(Path("templates/template.html"))
+    receivers = ['monk3yd.thelab@yahoo.com', 'monk3yd.thelab@gmail.com']
+    subject = 'Project: Send Email with Jinja Templating via Gmail API'
+    html_text = open_template(Path("templates/template.html"))
     parameters = {
             'name': 'John Doe',
             'age': 28,
+        #    {'name': 'Walter White', 'age': 64},
         }
-    no_html_template = open_template(Path("templates/template.txt"))
+    no_html_text = open_template(Path("templates/template.txt"))
     # google_tracker = {}  # https://htmlemail.io/blog/google-analytics-email-tracking
        
 
     # Create email
     new_email = Email(
         sender=sender,  # list()
-        receiver=receiver,  # list()
+        receivers=receivers,  # list()
         subject=subject,  # str()
-        html_template=html_template,  # str()
+        html_text=html_text,  # str()
         parameters=parameters,  # dict()
-        no_html_template=no_html_template,  # str()
+        no_html_text=no_html_text,  # str()
         # google_tracker=google_tracker  # dict()  
     )
-    # print(new_email)
 
     # Send email
     new_email.send()
