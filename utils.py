@@ -1,4 +1,5 @@
 import os.path
+import json
 
 # Gmail API utils
 from google.auth.transport.requests import Request
@@ -54,18 +55,24 @@ def open_template(template_path):
 
 # Create a message for an email. returns an object contaianing base64url encoded email objects.
 def create_message(sender, receiver, subject, html, text):
-    message = MIMEMultipart('alternative')
-    message['sender'] = sender
-    message['receiver'] = receiver
-    message['subject'] = subject
+    msg = MIMEMultipart('alternative')
+    msg['from'] = sender
+    msg['to'] = receiver
+    msg['subject'] = subject
 
-    plain_msg_body = MIMEText(text, 'plain')
-    html_msg_body = MIMEText(html, 'html')
+    msg.attach(MIMEText(text, 'plain'))
+    msg.attach(MIMEText(html, 'html'))
 
-    message.attach(plain_msg_body)
-    message.attach(html_msg_body)
+    return {'raw': urlsafe_b64encode(msg.as_bytes())}
 
-    print(message.as_string())
-
-    # 1.2 and encode it as a base64url string.
-    return {'raw': urlsafe_b64encode(message.as_string().encode())}
+def send_message(service, user_id, message):
+    try:
+        message['raw'] = message['raw'].decode()
+        # json_object = json.dumps(message, indent=4)
+        # print(json_object)
+        message = (service.users().messages().send(userId=user_id, body=message).execute())
+        print('Message Id: %s' % message['id']) 
+        return message
+    except HttpError as error:
+        # TODO (developer) - Handle errors from gmail API.
+        print(f'An error occurred: {error}')
