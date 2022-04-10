@@ -1,5 +1,4 @@
 import os.path
-import json
 
 # Gmail API utils
 from google.auth.transport.requests import Request
@@ -53,7 +52,6 @@ def open_template(template_path):
         template = file.read()
         return template
 
-# Create a message for an email. returns an object contaianing base64url encoded email objects.
 def create_message(sender, receiver, subject, html, text):
     msg = MIMEMultipart('alternative')
     msg['from'] = sender
@@ -69,7 +67,7 @@ def send_message(service, user_id, message):
     try:
         message['raw'] = message['raw'].decode()
         message = (service.users().messages().send(userId=user_id, body=message).execute())
-        print('Message Id: %s' % message['id']) 
+        print(f'Message Id: {message["id"]}') 
         return message
     except HttpError as error:
         # (developer) - Handle errors from gmail API.
