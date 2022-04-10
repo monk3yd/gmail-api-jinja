@@ -17,7 +17,7 @@ class Email():
 
         # Create message
         self.encoded_message = create_message(self.sender, self.receiver, self.subject, self.html_template, self.no_html_template) 
-        print(self.encoded_message)
+
     # Send message
     def send(self):
         send_message(self.service, 'me', self.encoded_message) 

@@ -68,11 +68,10 @@ def create_message(sender, receiver, subject, html, text):
 def send_message(service, user_id, message):
     try:
         message['raw'] = message['raw'].decode()
-        # json_object = json.dumps(message, indent=4)
-        # print(json_object)
         message = (service.users().messages().send(userId=user_id, body=message).execute())
         print('Message Id: %s' % message['id']) 
         return message
     except HttpError as error:
-        # TODO (developer) - Handle errors from gmail API.
+        # (developer) - Handle errors from gmail API.
         print(f'An error occurred: {error}')
+        return "Error"
