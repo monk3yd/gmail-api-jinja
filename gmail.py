@@ -19,6 +19,7 @@ class Email():
         self.list_of_messages = []
         # Loop through all receivers creating one message for each
         for user in self.parameters:
+            email = user['email']
             name = user['name']
             age = str(user['age'])
 
@@ -30,7 +31,7 @@ class Email():
             no_html = no_html_tm.render(name=name, age=age) 
 
             # Create message
-            encoded_message = create_message(self.sender, user['email'], self.subject, html, no_html) 
+            encoded_message = create_message(self.sender, email, self.subject, html, no_html) 
             self.list_of_messages.append(encoded_message)
 
     # Send message

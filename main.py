@@ -24,7 +24,7 @@ def main():
     ]
 
     sender = 'monk3yd.thelab@gmail.com'
-    receivers = [user['email'] for user in parameters]
+    receivers = [user['email'] for user in parameters] # Isn't necessary if email is included in parameters
     subject = 'Project: Send Email with Jinja Templating via Gmail API'
     html_text = open_template(Path("templates/template.html"))
     no_html_text = open_template(Path("templates/template.txt"))
