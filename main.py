@@ -10,15 +10,23 @@ from utils import open_template
 
 def main():
     # Email content
-    sender = 'monk3yd.thelab@gmail.com'
-    receivers = ['monk3yd.thelab@yahoo.com', 'monk3yd.thelab@gmail.com']
-    subject = 'Project: Send Email with Jinja Templating via Gmail API'
-    html_text = open_template(Path("templates/template.html"))
-    parameters = {
+    parameters = [
+        {
+            'email': 'monk3yd.thelab@yahoo.com',
             'name': 'John Doe',
             'age': 28,
-        #    {'name': 'Walter White', 'age': 64},
-        }
+        },
+        {
+            'email': 'monk3yd.thelab@gmail.com',
+            'name': 'Walter White',
+            'age': 64,
+        },
+    ]
+
+    sender = 'monk3yd.thelab@gmail.com'
+    receivers = [user['email'] for user in parameters]
+    subject = 'Project: Send Email with Jinja Templating via Gmail API'
+    html_text = open_template(Path("templates/template.html"))
     no_html_text = open_template(Path("templates/template.txt"))
     # google_tracker = {}  # https://htmlemail.io/blog/google-analytics-email-tracking
        
@@ -29,7 +37,7 @@ def main():
         receivers=receivers,  # list()
         subject=subject,  # str()
         html_text=html_text,  # str()
-        parameters=parameters,  # dict()
+        parameters=parameters,  # list of dicts
         no_html_text=no_html_text,  # str()
         # google_tracker=google_tracker  # dict()  
     )

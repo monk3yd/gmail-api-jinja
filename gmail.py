@@ -13,28 +13,24 @@ class Email():
         self.no_html_text = no_html_text
         self.google_tracker = google_tracker
 
-        # Templating with params variables  # TODO export to utils.py, make function template_and_render(string, params)
-        name = self.parameters['name']
-        age = str(self.parameters['age'])
-
-        html_tm = Template(self.html_text)
-        html = html_tm.render(name=name, age=age)
-
-        no_html_tm = Template(self.no_html_text)
-        no_html = no_html_tm.render(name=name, age=age) 
-
         # Call the Gmail API
         self.service = gmail_authenticate()
 
-
         self.list_of_messages = []
         # Loop through all receivers creating one message for each
-        for receiver in self.receivers:
-            print(receiver)
+        for user in self.parameters:
+            name = user['name']
+            age = str(user['age'])
+
+            # Templating with params variables  # TODO export to utils.py, make function template_and_render(string, params)
+            html_tm = Template(self.html_text)
+            html = html_tm.render(name=name, age=age)
+
+            no_html_tm = Template(self.no_html_text)
+            no_html = no_html_tm.render(name=name, age=age) 
 
             # Create message
-            encoded_message = create_message(self.sender, receiver, self.subject, html, no_html) 
-
+            encoded_message = create_message(self.sender, user['email'], self.subject, html, no_html) 
             self.list_of_messages.append(encoded_message)
 
     # Send message

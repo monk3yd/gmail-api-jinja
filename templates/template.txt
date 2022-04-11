@@ -1,1 +1,3 @@
-My name is {{ name }}, I'm {{ age }} years old.
+This is a template! 
+Dear {{ name }},
+Happy Birthday! You're {{ age }} years old now.
