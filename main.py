@@ -10,7 +10,7 @@ from utils import open_template
 
 def main():
     # Email content
-    parameters = [
+    parameters = [  # Ideally imported from csv file or db. keys/columns, elements in list rows
         {
             'email': 'monk3yd.thelab@yahoo.com',
             'name': 'John Doe',
@@ -21,6 +21,11 @@ def main():
             'name': 'Walter White',
             'age': 64,
         },
+        {
+            'email': 'monk3yd.thelab@protonmail.com',
+            'name': 'Kvothe Kingkiller',
+            'age': 37,
+        }
     ]
 
     sender = 'monk3yd.thelab@gmail.com'
@@ -53,3 +58,4 @@ if __name__ == '__main__':
 # https://www.thepythoncode.com/article/use-gmail-api-in-python#Enabling_Gmail_API
 # https://developers.google.com/gmail/api/guides/sending
 # https://stackoverflow.com/questions/37201250/sending-email-via-gmail-python
+# https://zetcode.com/python/jinja/

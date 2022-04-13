@@ -25,7 +25,7 @@ class Email():
 
             # Templating with params variables  # TODO export to utils.py, make function template_and_render(string, params)
             html_tm = Template(self.html_text)
-            html = html_tm.render(name=name, age=age)
+            html = html_tm.render(name=name, age=age)  # kwargs**  ?? TODO render automatically
 
             no_html_tm = Template(self.no_html_text)
             no_html = no_html_tm.render(name=name, age=age) 
