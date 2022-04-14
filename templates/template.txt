@@ -1,0 +1,8 @@
+This is a text template! 
+
+Dear {{ name }},
+Happy Birthday! You're {{ age }} years old now.
+
+One
+Two
+Three
