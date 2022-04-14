@@ -1,5 +1,5 @@
 # Project: Send Email via Gmail API (business) with Templates (jinja2) using Python
-from __future__ import print_function  # ?? Test
+from __future__ import print_function
 
 from pathlib import Path
 
@@ -66,3 +66,4 @@ if __name__ == '__main__':
 # https://stackoverflow.com/questions/37201250/sending-email-via-gmail-python
 # https://zetcode.com/python/jinja/
 # https://htmlemail.io/blog/google-analytics-email-tracking
+# https://developers.google.com/identity/protocols/oauth2
