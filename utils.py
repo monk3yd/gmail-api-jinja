@@ -28,6 +28,9 @@ SCOPES = [
     'https://www.googleapis.com/auth/gmail.send'
 ]
 
+# Stores all encoded messages
+all_messages = []
+
 # Connect to Gmail's API (Authentication)
 def gmail_authenticate():
     creds = None
@@ -85,8 +88,29 @@ def create_pixelURL_tracker(google_tracker):
     tracker_title = urllib.parse.quote(google_tracker['tracker_title'], safe='')
     return f'https://www.google-analytics.com/collect?v=1&tid={tracking_id}&cid={client_id}&aip={anonymize_ip}&t=event&ec=email&ea=open&dp={tracker_path}&dt={tracker_title}'
 
-def template_and_render():
-    pass
+def create_all_messages(sender, subject, parameters, pixelURL_tracker, html_text, no_html_text):
+    # Loop through all receivers creating one message for each
+    for user in parameters:
+        email = user['email']
+        name = user['name']
+        age = str(user['age'])
+            
+        # TODO make function template_and_render(string, params)
+        # Templating HTML with params and pixelURL variables  
+        html_tm = Template(html_text)
+        html = html_tm.render(
+            name=name,
+            age=age,
+            pixelURL_tracker=pixelURL_tracker
+        )  # kwargs**  ?? TODO render automatically
+
+        no_html_tm = Template(no_html_text)
+        no_html = no_html_tm.render(name=name, age=age)  # A real no_html email can't be tracked. Need hybrid email. 
+
+        # Create message
+        encoded_message = create_message(sender, email, subject, html, no_html) 
+        all_messages.append(encoded_message)
+    return all_messages
 
 # The high-level workflow to send an email is to:
     # 1.1 Create the email content
