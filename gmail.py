@@ -1,5 +1,6 @@
 from utils import gmail_authenticate, send_message, create_pixelURL_tracker, create_all_messages
 
+
 class Email():
 
     def __init__(self, sender, receivers, subject, parameters={}, html_text="", no_html_text="", google_tracker={}):

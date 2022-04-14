@@ -40,7 +40,6 @@ def main():
         'tracker_path': '/email/tracker',  # Hardcode?
         'tracker_title': 'My Email Tracker'  # Hardcode?
     }  
-       
 
     # Create email
     new_email = Email(
@@ -50,7 +49,7 @@ def main():
         html_text=html_text,  # str()
         parameters=parameters,  # list of dicts
         no_html_text=no_html_text,  # str()
-        google_tracker=google_tracker  # dict()  
+        google_tracker=google_tracker  # dict()
     )
 
     # Send email
@@ -66,4 +65,3 @@ if __name__ == '__main__':
 # https://stackoverflow.com/questions/37201250/sending-email-via-gmail-python
 # https://zetcode.com/python/jinja/
 # https://htmlemail.io/blog/google-analytics-email-tracking
-# https://developers.google.com/identity/protocols/oauth2

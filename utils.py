@@ -29,6 +29,7 @@ SCOPES = [
 # Stores all encoded messages
 all_messages = []
 
+
 # Connect to Gmail's API (Authentication)
 def gmail_authenticate():
     creds = None
@@ -51,10 +52,12 @@ def gmail_authenticate():
             token.write(creds.to_json())
     return build('gmail', 'v1', credentials=creds)
 
+
 def open_template(template_path):
     with open(template_path, "r") as file:
         template = file.read()
         return template
+
 
 def create_pixelURL_tracker(google_tracker):
     tracking_id = google_tracker['tracking_id']
@@ -63,6 +66,7 @@ def create_pixelURL_tracker(google_tracker):
     tracker_path = urllib.parse.quote(google_tracker['tracker_path'], safe='')
     tracker_title = urllib.parse.quote(google_tracker['tracker_title'], safe='')
     return f'https://www.google-analytics.com/collect?v=1&tid={tracking_id}&cid={client_id}&aip={anonymize_ip}&t=event&ec=email&ea=open&dp={tracker_path}&dt={tracker_title}'
+
 
 def create_message(sender, receiver, subject, html, text):
     message = MIMEMultipart('alternative')
@@ -74,6 +78,7 @@ def create_message(sender, receiver, subject, html, text):
     message.attach(MIMEText(html, 'html'))
 
     return {'raw': urlsafe_b64encode(message.as_bytes())}
+
 
 # def create_message_with_attachment(sender, receiver, subject, html, file):
     # message = MIMEMultipart()
@@ -113,13 +118,14 @@ def create_message(sender, receiver, subject, html, text):
 
     # return {'raw': base64.urlsafe_b64encode(message.as_bytes())}
 
+
 def create_all_messages(sender, subject, parameters, pixelURL_tracker, html_text, no_html_text):
     # Loop through all receivers creating one message for each
     for user in parameters:
         email = user['email']
         name = user['name']
         age = str(user['age'])
-            
+
         # TODO make function template_and_render(string, params)
         # Templating HTML with params and pixelURL variables  
         html_tm = Template(html_text)
@@ -136,6 +142,7 @@ def create_all_messages(sender, subject, parameters, pixelURL_tracker, html_text
         encoded_message = create_message(sender, email, subject, html, no_html) 
         all_messages.append(encoded_message)
     return all_messages
+
 
 def send_message(service, user_id, message):
     try:
@@ -158,4 +165,3 @@ def send_message(service, user_id, message):
     # 2.2 and set its raw property to the base64url string you just created.
 
     # 3. Call messages.send, or, if sending a draft, drafts.send to send the message.
- 
