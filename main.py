@@ -1,5 +1,5 @@
 # Project: Send Email via Gmail API (business) with Templates (jinja2) using Python
-from __future__ import print_function
+from __future__ import print_function  # ?? Test
 
 from pathlib import Path
 
@@ -39,7 +39,7 @@ def main():
         'anonymize_ip': 1,  # 1=enable  # Hardcode?
         'tracker_path': '/email/tracker',  # Hardcode?
         'tracker_title': 'My Email Tracker'  # Hardcode?
-    }  # https://htmlemail.io/blog/google-analytics-email-tracking
+    }  
        
 
     # Create email
@@ -65,3 +65,4 @@ if __name__ == '__main__':
 # https://developers.google.com/gmail/api/guides/sending
 # https://stackoverflow.com/questions/37201250/sending-email-via-gmail-python
 # https://zetcode.com/python/jinja/
+# https://htmlemail.io/blog/google-analytics-email-tracking

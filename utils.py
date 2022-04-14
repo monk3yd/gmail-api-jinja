@@ -1,4 +1,5 @@
 import os.path
+import urllib.parse
 
 # Gmail API utils
 from google.auth.transport.requests import Request
@@ -17,6 +18,8 @@ from email.mime.multipart import MIMEMultipart
 # from email.mime.audio import MIMEAudio
 from email.mime.base import MIMEBase
 # from mimetypes import guess_type as guess_mime_type
+
+from jinja2 import Template
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = [
@@ -73,6 +76,17 @@ def send_message(service, user_id, message):
         # (developer) - Handle errors from gmail API.
         print(f'An error occurred: {error}')
         return "Error"
+
+def create_pixelURL_tracker(google_tracker):
+    tracking_id = google_tracker['tracking_id']
+    client_id = int(google_tracker['client_id'])
+    anonymize_ip = int(google_tracker['anonymize_ip'])
+    tracker_path = urllib.parse.quote(google_tracker['tracker_path'], safe='')
+    tracker_title = urllib.parse.quote(google_tracker['tracker_title'], safe='')
+    return f'https://www.google-analytics.com/collect?v=1&tid={tracking_id}&cid={client_id}&aip={anonymize_ip}&t=event&ec=email&ea=open&dp={tracker_path}&dt={tracker_title}'
+
+def template_and_render():
+    pass
 
 # The high-level workflow to send an email is to:
     # 1.1 Create the email content
