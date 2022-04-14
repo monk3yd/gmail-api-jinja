@@ -33,7 +33,13 @@ def main():
     subject = 'Project: Send Email with Jinja Templating via Gmail API'
     html_text = open_template(Path("templates/template.html"))
     no_html_text = open_template(Path("templates/template.txt"))
-    # google_tracker = {}  # https://htmlemail.io/blog/google-analytics-email-tracking
+    google_tracker = {
+        'tracking_id': 'UA-226021269-1',
+        'client_id': 555,  # anonymous  # Hardcode?
+        'anonymize_ip': 1,  # 1=enable  # Hardcode?
+        'tracker_path': '/email/tracker',  # Hardcode?
+        'tracker_title': 'My Email Tracker'  # Hardcode?
+    }  # https://htmlemail.io/blog/google-analytics-email-tracking
        
 
     # Create email
@@ -44,7 +50,7 @@ def main():
         html_text=html_text,  # str()
         parameters=parameters,  # list of dicts
         no_html_text=no_html_text,  # str()
-        # google_tracker=google_tracker  # dict()  
+        google_tracker=google_tracker  # dict()  
     )
 
     # Send email
