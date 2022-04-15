@@ -80,46 +80,47 @@ def create_message(sender, receiver, subject, html, text):
     return {'raw': urlsafe_b64encode(message.as_bytes())}
 
 
-# def create_message_with_attachment(sender, receiver, subject, html, file):
-    # message = MIMEMultipart()
-    # message['from'] = sender
-    # message['to'] = receiver
-    # message['subject'] = subject
+def create_message_with_attachment(sender, receiver, subject, html, file):
+    message = MIMEMultipart()
+    message['from'] = sender
+    message['to'] = receiver
+    message['subject'] = subject
 
-    # message.attach(MIMEText(html, 'html'))
+    # message.attach(MIMEText(text, 'plain'))
+    message.attach(MIMEText(html, 'html'))
 
-    # content_type, encoding = guess_mime_type(file)
+    content_type, encoding = guess_mime_type(file)
 
-    # if content_type is None or encoding is not None:
-    #     content_type = 'application/octet-stream'
+    if content_type is None or encoding is not None:
+        content_type = 'application/octet-stream'
 
-    # main_type, sub_type = content_type.split('/', 1)
-    # if main_type == 'text':
-    #     fp = open(file, 'rb')
-    #     msg = MIMEText(fp.read(), _subtype=sub_type)
-    #     fp.close()
-    # elif main_type == 'image':
-    #     fp = open(file, 'rb')
-    #     msg = MIMEImage(fp.read(), _subtype=sub_type)
-    #     fp.close()
-    # elif main_type == 'audio':
-    #     fp = open(file, 'rb')
-    #     msg = MIMEAudio(fp.read(), _subtype=sub_type)
-    #     fp.close()
-    # else:
-    #     fp = open(file, 'rb')
-    #     msg = MIMEBase(main_type, sub_type)
-    #     msg.set_payload(fp.read())
-    #     fp.close()
+    main_type, sub_type = content_type.split('/', 1)
+    if main_type == 'text':
+        fp = open(file, 'r')
+        msg = MIMEText(fp.read(), _subtype=sub_type)
+        fp.close()
+    elif main_type == 'image':
+        fp = open(file, 'rb')
+        msg = MIMEImage(fp.read(), _subtype=sub_type)
+        fp.close()
+    elif main_type == 'audio':
+        fp = open(file, 'rb')
+        msg = MIMEAudio(fp.read(), _subtype=sub_type)
+        fp.close()
+    else:
+        fp = open(file, 'rb')
+        msg = MIMEBase(main_type, sub_type)
+        msg.set_payload(fp.read())
+        fp.close()
 
-    # filename = os.path.basename(file)
-    # msg.add_header('Content-Disposition', 'attachment', filename=filename)
-    # message.attach(msg)
+    filename = os.path.basename(file)
+    msg.add_header('Content-Disposition', 'attachment', filename=filename)
+    message.attach(msg)
 
-    # return {'raw': base64.urlsafe_b64encode(message.as_bytes())}
+    return {'raw': urlsafe_b64encode(message.as_bytes())}
 
 
-def create_all_messages(sender, subject, parameters, pixelURL_tracker, html_text, no_html_text):
+def create_all_messages(sender, subject, parameters, pixelURL_tracker, html_text, no_html_text, attachment=""):
     # Loop through all receivers creating one message for each
     for user in parameters:
         email = user['email']
@@ -139,7 +140,10 @@ def create_all_messages(sender, subject, parameters, pixelURL_tracker, html_text
         no_html = no_html_tm.render(name=name, age=age)  # A real no_html email can't be tracked. Need hybrid email. 
 
         # Create message
-        encoded_message = create_message(sender, email, subject, html, no_html) 
+        if not attachment:
+            encoded_message = create_message(sender, email, subject, html, no_html) 
+        else:
+            encoded_message = create_message_with_attachment(sender, email, subject, html, attachment)
         all_messages.append(encoded_message)
     return all_messages
 
@@ -154,6 +158,7 @@ def send_message(service, user_id, message):
         # (developer) - Handle errors from gmail API.
         print(f'An error occurred: {error}')
         return "Error"
+
 
 # The high-level workflow to send an email is to:
     # 1.1 Create the email content

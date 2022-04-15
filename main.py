@@ -16,16 +16,16 @@ def main():
             'name': 'John Doe',
             'age': 28,
         },
-        {
-            'email': 'monk3yd.thelab@gmail.com',
-            'name': 'Walter White',
-            'age': 64,
-        },
-        {
-            'email': 'monk3yd.thelab@protonmail.com',
-            'name': 'Kvothe Kingkiller',
-            'age': 37,
-        }
+        # {
+        #     'email': 'monk3yd.thelab@gmail.com',
+        #     'name': 'Walter White',
+        #     'age': 64,
+        # },
+        # {
+        #     'email': 'monk3yd.thelab@protonmail.com',
+        #     'name': 'Kvothe Kingkiller',
+        #     'age': 37,
+        # }
     ]
 
     sender = 'monk3yd.thelab@gmail.com'
@@ -33,6 +33,7 @@ def main():
     subject = 'Project: Send Email with Jinja Templating via Gmail API'
     html_text = open_template(Path("templates/template.html"))
     no_html_text = open_template(Path("templates/template.txt"))
+    my_file = Path("attachments/test.txt")
     google_tracker = {
         'tracking_id': 'UA-226021269-1',
         'client_id': 555,  # anonymous  # Hardcode?
@@ -49,6 +50,7 @@ def main():
         html_text=html_text,  # str()
         parameters=parameters,  # list of dicts
         no_html_text=no_html_text,  # str()
+        attachment=my_file,  # list()
         google_tracker=google_tracker  # dict()
     )
 
@@ -65,3 +67,4 @@ if __name__ == '__main__':
 # https://stackoverflow.com/questions/37201250/sending-email-via-gmail-python
 # https://zetcode.com/python/jinja/
 # https://htmlemail.io/blog/google-analytics-email-tracking
+# https://learndataanalysis.org/how-to-use-gmail-api-to-send-an-email-with-attachments-in-python/
