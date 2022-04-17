@@ -67,7 +67,7 @@ def create_pixelURL_tracker(google_tracker):
     tracker_title = urllib.parse.quote(google_tracker['tracker_title'], safe='')
     return f'https://www.google-analytics.com/collect?v=1&tid={tracking_id}&cid={client_id}&aip={anonymize_ip}&t=event&ec=email&ea=open&dp={tracker_path}&dt={tracker_title}'
 
-
+# create_message and create_message_w_attachment can refactor to only 1 func
 def create_message(sender, receiver, subject, html, text):
     message = MIMEMultipart('alternative')
     message['from'] = sender

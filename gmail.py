@@ -3,7 +3,7 @@ from utils import gmail_authenticate, send_message, create_pixelURL_tracker, cre
 
 class Email():
 
-    def __init__(self, sender, receivers, subject, parameters={}, html_text="", no_html_text="", attachment="", google_tracker={}):
+    def __init__(self, sender, receivers, subject, parameters=None, html_text="", no_html_text="", attachment="", google_tracker=None):
         # Email Object Properties
         self.sender = sender
         self.receivers = receivers
