@@ -11,6 +11,7 @@ class Email():
         self.parameters = parameters
         self.html_text = html_text
         self.no_html_text = no_html_text
+        self.pixelURL_tracker = google_tracker
 
         # Call the Gmail API
         self.service = gmail_authenticate()
@@ -33,4 +34,4 @@ class Email():
     # Send messages
     def send(self):
         for message in self.all_encoded_messages:
-            send_message(self.service, 'me', message) 
+            send_message(self.service, 'me', message)

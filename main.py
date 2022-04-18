@@ -17,16 +17,16 @@ def main():
             'name': 'John Doe',
             'age': 28,
         },
-        # {
-        #     'email': 'monk3yd.thelab@gmail.com',
-        #     'name': 'Walter White',
-        #     'age': 64,
-        # },
-        # {
-        #     'email': 'monk3yd.thelab@protonmail.com',
-        #     'name': 'Kvothe Kingkiller',
-        #     'age': 37,
-        # }
+        {
+            'email': 'monk3yd.thelab@gmail.com',
+            'name': 'Walter White',
+            'age': 64,
+        },
+        {
+            'email': 'monk3yd.thelab@protonmail.com',
+            'name': 'Kvothe Kingkiller',
+            'age': 37,
+        }
     ]
 
     sender = 'monk3yd.thelab@gmail.com'
