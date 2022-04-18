@@ -67,7 +67,8 @@ def create_pixelURL_tracker(google_tracker):
     tracker_title = urllib.parse.quote(google_tracker['tracker_title'], safe='')
     return f'https://www.google-analytics.com/collect?v=1&tid={tracking_id}&cid={client_id}&aip={anonymize_ip}&t=event&ec=email&ea=open&dp={tracker_path}&dt={tracker_title}'
 
-# create_message and create_message_w_attachment can refactor to only 1 func
+
+# TODO create_message and create_message_w_attachment can refactor to only 1 func
 def create_message(sender, receiver, subject, html, text):
     message = MIMEMultipart('alternative')
     message['from'] = sender
@@ -120,7 +121,7 @@ def create_message_with_attachment(sender, receiver, subject, html, file):
     return {'raw': urlsafe_b64encode(message.as_bytes())}
 
 
-def create_all_messages(sender, subject, parameters, pixelURL_tracker, html_text, no_html_text, attachment=""):
+def create_all_messages(sender, subject, parameters, pixelURL_tracker, html_text, no_html_text=None, attachment=None):
     # Loop through all receivers creating one message for each
     for user in parameters:
         email = user['email']
@@ -140,7 +141,7 @@ def create_all_messages(sender, subject, parameters, pixelURL_tracker, html_text
         no_html = no_html_tm.render(name=name, age=age)  # A real no_html email can't be tracked. Need hybrid email. 
 
         # Create message
-        if not attachment:
+        if attachment is None:
             encoded_message = create_message(sender, email, subject, html, no_html) 
         else:
             encoded_message = create_message_with_attachment(sender, email, subject, html, attachment)
@@ -158,15 +159,3 @@ def send_message(service, user_id, message):
         # (developer) - Handle errors from gmail API.
         print(f'An error occurred: {error}')
         return "Error"
-
-
-# The high-level workflow to send an email is to:
-    # 1.1 Create the email content
-
-    # 1.2 and encode it as a base64url string.
-
-    # 2.1 Create a new message resource
-
-    # 2.2 and set its raw property to the base64url string you just created.
-
-    # 3. Call messages.send, or, if sending a draft, drafts.send to send the message.

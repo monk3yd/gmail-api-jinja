@@ -1,16 +1,17 @@
-# Project: Send Email via Gmail API (business) with Templates (jinja2) using Python
+# Project: Send Email via Gmail API (business) with HTML Templates (jinja2) using Python
+
 from __future__ import print_function  # ??
 
 from pathlib import Path
 
-# Own
+# Own classes and functions
 from gmail import Email
 from utils import open_template
 
 
 def main():
     # Email content
-    parameters = [  # Ideally imported from csv file or db. keys/columns, elements in list rows
+    parameters = [  # Ideally imported from csv file or db. element keys represents columns, each element in list represents a row
         {
             'email': 'monk3yd.thelab@yahoo.com',
             'name': 'John Doe',
@@ -29,11 +30,13 @@ def main():
     ]
 
     sender = 'monk3yd.thelab@gmail.com'
-    receivers = [user['email'] for user in parameters] # Isn't necessary if email is included in parameters
-    subject = 'Project: Send Email with Jinja Templating via Gmail API'
+    receivers = [user['email'] for user in parameters]  # Isn't necessary if email is included in parameters
+    subject = 'Project: Send Email via Gmail API with HTML Templates (jinja2) using Python'
     html_text = open_template(Path("templates/template.html"))
+
+    # Optional email content 
     no_html_text = open_template(Path("templates/template.txt"))
-    my_file = Path("attachments/test.txt")
+    attachment_file = Path("attachments/test.txt")
     google_tracker = {
         'tracking_id': 'UA-226021269-1',
         'client_id': 555,  # anonymous  # Hardcode?
@@ -44,14 +47,14 @@ def main():
 
     # Create email
     new_email = Email(
-        sender=sender,  # list()
+        sender=sender,  # str(), ideally list()
         receivers=receivers,  # list()
         subject=subject,  # str()
-        html_text=html_text,  # str()
         parameters=parameters,  # list of dicts
+        html_text=html_text,  # str()
         no_html_text=no_html_text,  # str()
-        attachment=my_file,  # list()
-        google_tracker=google_tracker  # dict()
+        google_tracker=google_tracker,  # dict()
+        attachment=attachment_file,  # list()
     )
 
     # Send email
