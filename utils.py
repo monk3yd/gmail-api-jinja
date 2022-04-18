@@ -81,7 +81,7 @@ def create_message(sender, receiver, subject, html, text):
     return {'raw': urlsafe_b64encode(message.as_bytes())}
 
 
-def create_message_with_attachment(sender, receiver, subject, html, file):
+def create_message_with_attachment(sender, receiver, subject, html, files):
     message = MIMEMultipart()
     message['from'] = sender
     message['to'] = receiver
@@ -90,38 +90,40 @@ def create_message_with_attachment(sender, receiver, subject, html, file):
     # message.attach(MIMEText(text, 'plain'))
     message.attach(MIMEText(html, 'html'))
 
-    content_type, encoding = guess_mime_type(file)
+    # TODO Add all attached files into message
+    for file in files:
+        content_type, encoding = guess_mime_type(file)
 
-    if content_type is None or encoding is not None:
-        content_type = 'application/octet-stream'
+        if content_type is None or encoding is not None:
+            content_type = 'application/octet-stream'
 
-    main_type, sub_type = content_type.split('/', 1)
-    if main_type == 'text':
-        fp = open(file, 'r')
-        msg = MIMEText(fp.read(), _subtype=sub_type)
-        fp.close()
-    elif main_type == 'image':
-        fp = open(file, 'rb')
-        msg = MIMEImage(fp.read(), _subtype=sub_type)
-        fp.close()
-    elif main_type == 'audio':
-        fp = open(file, 'rb')
-        msg = MIMEAudio(fp.read(), _subtype=sub_type)
-        fp.close()
-    else:
-        fp = open(file, 'rb')
-        msg = MIMEBase(main_type, sub_type)
-        msg.set_payload(fp.read())
-        fp.close()
+        main_type, sub_type = content_type.split('/', 1)
+        if main_type == 'text':
+            fp = open(file, 'r')
+            msg = MIMEText(fp.read(), _subtype=sub_type)
+            fp.close()
+        elif main_type == 'image':
+            fp = open(file, 'rb')
+            msg = MIMEImage(fp.read(), _subtype=sub_type)
+            fp.close()
+        elif main_type == 'audio':
+            fp = open(file, 'rb')
+            msg = MIMEAudio(fp.read(), _subtype=sub_type)
+            fp.close()
+        else:
+            fp = open(file, 'rb')
+            msg = MIMEBase(main_type, sub_type)
+            msg.set_payload(fp.read())
+            fp.close()
 
-    filename = os.path.basename(file)
-    msg.add_header('Content-Disposition', 'attachment', filename=filename)
-    message.attach(msg)
+        filename = os.path.basename(file)
+        msg.add_header('Content-Disposition', 'attachment', filename=filename)
+        message.attach(msg)
 
     return {'raw': urlsafe_b64encode(message.as_bytes())}
 
 
-def create_all_messages(sender, subject, parameters, pixelURL_tracker, html_text, no_html_text=None, attachment=None):
+def create_all_messages(sender, subject, parameters, html_text, no_html_text, pixelURL_tracker, attachments):
     # Loop through all receivers creating one message for each
     for user in parameters:
         email = user['email']
@@ -129,7 +131,7 @@ def create_all_messages(sender, subject, parameters, pixelURL_tracker, html_text
         age = str(user['age'])
 
         # TODO make function template_and_render(string, params)
-        # Templating HTML with params and pixelURL variables  
+        # Templating HTML with params and pixelURL variables
         html_tm = Template(html_text)
         html = html_tm.render(
             name=name,
@@ -138,13 +140,13 @@ def create_all_messages(sender, subject, parameters, pixelURL_tracker, html_text
         )  # kwargs**  ?? TODO render automatically?
 
         no_html_tm = Template(no_html_text)
-        no_html = no_html_tm.render(name=name, age=age)  # A real no_html email can't be tracked. Need hybrid email. 
+        no_html = no_html_tm.render(name=name, age=age)  # A true no_html email can't be tracked because it's just text. Need hybrid email.
 
         # Create message
-        if attachment is None:
-            encoded_message = create_message(sender, email, subject, html, no_html) 
+        if attachments is None:
+            encoded_message = create_message(sender, email, subject, html, no_html)
         else:
-            encoded_message = create_message_with_attachment(sender, email, subject, html, attachment)
+            encoded_message = create_message_with_attachment(sender, email, subject, html, attachments)
         all_messages.append(encoded_message)
     return all_messages
 

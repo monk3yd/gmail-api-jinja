@@ -10,7 +10,7 @@ from utils import open_template
 
 
 def main():
-    # Email content
+    # Email content (mandatory)
     parameters = [  # Ideally imported from csv file or db. element keys represents columns, each element in list represents a row
         {
             'email': 'monk3yd.thelab@yahoo.com',
@@ -34,16 +34,20 @@ def main():
     subject = 'Project: Send Email via Gmail API with HTML Templates (jinja2) using Python'
     html_text = open_template(Path("templates/template.html"))
 
-    # Optional email content 
+    # Email content (optional)
     no_html_text = open_template(Path("templates/template.txt"))
-    attachment_file = Path("attachments/test.txt")
+
+    # Load all attachments from attachments directory
+    attachments_path = Path("attachments").glob("**/*")
+    attachments = [element for element in attachments_path if element.is_file()]
+
     google_tracker = {
         'tracking_id': 'UA-226021269-1',
         'client_id': 555,  # anonymous  # Hardcode?
         'anonymize_ip': 1,  # 1=enable  # Hardcode?
         'tracker_path': '/email/tracker',  # Hardcode?
         'tracker_title': 'My Email Tracker'  # Hardcode?
-    }  
+    }
 
     # Create email
     new_email = Email(
@@ -54,7 +58,7 @@ def main():
         html_text=html_text,  # str()
         no_html_text=no_html_text,  # str()
         google_tracker=google_tracker,  # dict()
-        attachment=attachment_file,  # list()
+        attachments=attachments,  # list()
     )
 
     # Send email
