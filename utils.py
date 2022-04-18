@@ -1,3 +1,4 @@
+from email.mime.application import MIMEApplication
 import os.path
 import urllib.parse
 
@@ -109,6 +110,10 @@ def create_message_with_attachment(sender, receiver, subject, html, files):
         elif main_type == 'audio':
             fp = open(file, 'rb')
             msg = MIMEAudio(fp.read(), _subtype=sub_type)
+            fp.close()
+        elif main_type == 'application':
+            fp = open(file, 'rb')
+            msg = MIMEApplication(fp.read(), _subtype=sub_type)
             fp.close()
         else:
             fp = open(file, 'rb')
