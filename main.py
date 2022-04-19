@@ -1,11 +1,12 @@
-# Project: Send Email via Gmail API with HTML Templates (jinja2) using Python
+# Project: Python library that sends Email via Gmail API. May use HTML Templates (that supports jinja2 syntax)
 
 import pandas as pd
 from pathlib import Path
 
 # My libraries
 from gmail import Email
-from utils import open_template, load_attachments
+from utils import open_template, load_attachments, setup_gtracker
+
 
 
 def main():
@@ -22,15 +23,7 @@ def main():
     # Optional email contents
     no_html_text = open_template(Path("templates/template.txt"))
     attachments = load_attachments(Path("attachments"))
-
-    # TODO - If hardcode make function setup_gtracker() input tracking_id outputs google_tracker
-    google_tracker = {
-        "tracking_id": "UA-226021269-1",
-        "client_id": 555,  # anonymous  # Hardcode?
-        "anonymize_ip": 1,  # 1=enable  # Hardcode?
-        "tracker_path": "/email/tracker",  # Hardcode?
-        "tracker_title": "My Email Tracker"  # Hardcode?
-    }
+    google_tracker = setup_gtracker(tracking_id="UA-226021269-1")  # Setup trackable pixelURL
 
     # Create email
     new_email = Email(

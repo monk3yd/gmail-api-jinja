@@ -71,12 +71,14 @@ def load_attachments(attachments_dir_path):
     return attachments
 
 
-def create_pixelURL_tracker(google_tracker):
-    tracking_id = google_tracker['tracking_id']
-    client_id = int(google_tracker['client_id'])
-    anonymize_ip = int(google_tracker['anonymize_ip'])
-    tracker_path = urllib.parse.quote(google_tracker['tracker_path'], safe='')
-    tracker_title = urllib.parse.quote(google_tracker['tracker_title'], safe='')
+def setup_gtracker(tracking_id: str, client_id: int = 555, anonymize_ip: int = 1, tracker_path: str = "/email/tracker", tracker_title: str = "My Email Tracker") -> str:
+    """
+        Input: tracking id string.
+        Creates pixelURL for tracking Google Analytics
+        Returns: pixelURL string    
+    """
+    tracker_path = urllib.parse.quote(tracker_path, safe='')
+    tracker_title = urllib.parse.quote(tracker_title, safe='')
     return f'https://www.google-analytics.com/collect?v=1&tid={tracking_id}&cid={client_id}&aip={anonymize_ip}&t=event&ec=email&ea=open&dp={tracker_path}&dt={tracker_title}'
 
 
@@ -139,7 +141,7 @@ def create_message_with_attachment(sender, receiver, subject, html, files):
     return {'raw': urlsafe_b64encode(message.as_bytes())}
 
 
-def create_all_messages(sender, subject, parameters, html_text, no_html_text, pixelURL_tracker, attachments):
+def create_all_messages(sender, subject, parameters, html_text, no_html_text, google_tracker, attachments):
     # Loop through all receivers creating one message for each
     for user in parameters:
         email = user['email']
@@ -147,7 +149,7 @@ def create_all_messages(sender, subject, parameters, html_text, no_html_text, pi
         # Templating HTML with params and pixelURL variables
         html_tm = Template(html_text)
         # Automatically prepopulate .render() function *kwargs with user key/value pairs
-        html = html_tm.render(**user, pixelURL_tracker=pixelURL_tracker)
+        html = html_tm.render(**user, google_tracker=google_tracker)
 
         no_html_tm = Template(no_html_text)
         no_html = no_html_tm.render(**user)  # A true no_html email can't be tracked because it's just text. Need hybrid email.
