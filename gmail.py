@@ -31,4 +31,4 @@ class Email():
     # Send messages
     def send(self):
         for message in self.all_encoded_messages:
-            send_message(self.service, 'me', message)
+            send_message(self.service, "me", message)
