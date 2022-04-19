@@ -1,3 +1,4 @@
+from email.mime.application import MIMEApplication
 import os.path
 import urllib.parse
 
@@ -68,6 +69,7 @@ def create_pixelURL_tracker(google_tracker):
     return f'https://www.google-analytics.com/collect?v=1&tid={tracking_id}&cid={client_id}&aip={anonymize_ip}&t=event&ec=email&ea=open&dp={tracker_path}&dt={tracker_title}'
 
 
+# TODO create_message and create_message_w_attachment can refactor to only 1 func
 def create_message(sender, receiver, subject, html, text):
     message = MIMEMultipart('alternative')
     message['from'] = sender
@@ -80,66 +82,72 @@ def create_message(sender, receiver, subject, html, text):
     return {'raw': urlsafe_b64encode(message.as_bytes())}
 
 
-# def create_message_with_attachment(sender, receiver, subject, html, file):
-    # message = MIMEMultipart()
-    # message['from'] = sender
-    # message['to'] = receiver
-    # message['subject'] = subject
+def create_message_with_attachment(sender, receiver, subject, html, files):
+    message = MIMEMultipart()
+    message['from'] = sender
+    message['to'] = receiver
+    message['subject'] = subject
 
-    # message.attach(MIMEText(html, 'html'))
+    # message.attach(MIMEText(text, 'plain'))
+    message.attach(MIMEText(html, 'html'))
 
-    # content_type, encoding = guess_mime_type(file)
+    # TODO Add all attached files into message
+    for file in files:
+        content_type, encoding = guess_mime_type(file)
 
-    # if content_type is None or encoding is not None:
-    #     content_type = 'application/octet-stream'
+        if content_type is None or encoding is not None:
+            content_type = 'application/octet-stream'
 
-    # main_type, sub_type = content_type.split('/', 1)
-    # if main_type == 'text':
-    #     fp = open(file, 'rb')
-    #     msg = MIMEText(fp.read(), _subtype=sub_type)
-    #     fp.close()
-    # elif main_type == 'image':
-    #     fp = open(file, 'rb')
-    #     msg = MIMEImage(fp.read(), _subtype=sub_type)
-    #     fp.close()
-    # elif main_type == 'audio':
-    #     fp = open(file, 'rb')
-    #     msg = MIMEAudio(fp.read(), _subtype=sub_type)
-    #     fp.close()
-    # else:
-    #     fp = open(file, 'rb')
-    #     msg = MIMEBase(main_type, sub_type)
-    #     msg.set_payload(fp.read())
-    #     fp.close()
+        main_type, sub_type = content_type.split('/', 1)
+        if main_type == 'text':
+            fp = open(file, 'r')
+            msg = MIMEText(fp.read(), _subtype=sub_type)
+            fp.close()
+        elif main_type == 'image':
+            fp = open(file, 'rb')
+            msg = MIMEImage(fp.read(), _subtype=sub_type)
+            fp.close()
+        elif main_type == 'audio':
+            fp = open(file, 'rb')
+            msg = MIMEAudio(fp.read(), _subtype=sub_type)
+            fp.close()
+        elif main_type == 'application':
+            fp = open(file, 'rb')
+            msg = MIMEApplication(fp.read(), _subtype=sub_type)
+            fp.close()
+        else:
+            fp = open(file, 'rb')
+            msg = MIMEBase(main_type, sub_type)
+            msg.set_payload(fp.read())
+            fp.close()
 
-    # filename = os.path.basename(file)
-    # msg.add_header('Content-Disposition', 'attachment', filename=filename)
-    # message.attach(msg)
+        filename = os.path.basename(file)
+        msg.add_header('Content-Disposition', 'attachment', filename=filename)
+        message.attach(msg)
 
-    # return {'raw': base64.urlsafe_b64encode(message.as_bytes())}
+    return {'raw': urlsafe_b64encode(message.as_bytes())}
 
 
-def create_all_messages(sender, subject, parameters, pixelURL_tracker, html_text, no_html_text):
+def create_all_messages(sender, subject, parameters, html_text, no_html_text, pixelURL_tracker, attachments):
     # Loop through all receivers creating one message for each
     for user in parameters:
         email = user['email']
         name = user['name']
         age = str(user['age'])
 
-        # TODO make function template_and_render(string, params)
-        # Templating HTML with params and pixelURL variables  
+        # Templating HTML with params and pixelURL variables
         html_tm = Template(html_text)
-        html = html_tm.render(
-            name=name,
-            age=age,
-            pixelURL_tracker=pixelURL_tracker
-        )  # kwargs**  ?? TODO render automatically?
+        # Automatically prepopulate .render() function *kwargs with user key/value pairs
+        html = html_tm.render(**user, pixelURL_tracker=pixelURL_tracker)
 
         no_html_tm = Template(no_html_text)
-        no_html = no_html_tm.render(name=name, age=age)  # A real no_html email can't be tracked. Need hybrid email. 
+        no_html = no_html_tm.render(name=name, age=age)  # A true no_html email can't be tracked because it's just text. Need hybrid email.
 
         # Create message
-        encoded_message = create_message(sender, email, subject, html, no_html) 
+        if attachments is None:
+            encoded_message = create_message(sender, email, subject, html, no_html)
+        else:
+            encoded_message = create_message_with_attachment(sender, email, subject, html, attachments)
         all_messages.append(encoded_message)
     return all_messages
 
@@ -154,14 +162,3 @@ def send_message(service, user_id, message):
         # (developer) - Handle errors from gmail API.
         print(f'An error occurred: {error}')
         return "Error"
-
-# The high-level workflow to send an email is to:
-    # 1.1 Create the email content
-
-    # 1.2 and encode it as a base64url string.
-
-    # 2.1 Create a new message resource
-
-    # 2.2 and set its raw property to the base64url string you just created.
-
-    # 3. Call messages.send, or, if sending a draft, drafts.send to send the message.
