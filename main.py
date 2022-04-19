@@ -11,7 +11,7 @@ from utils import open_template, load_attachments, setup_gtracker
 
 def main():
     # Load parameters data in csv file into pandas dataframe
-    df = pd.read_csv(Path("data.csv"))  # TODO replace NaN values from columns to empty strings
+    df = pd.read_csv(Path("data.csv")).fillna("")  # TODO Clean data - replace NaN values from columns to empty strings
 
     # Email contents
     parameters = df.to_dict(orient="records")  # Convert dataframe to list of dicts, element keys represent the variables names that can be used in the HTML jinja template 
