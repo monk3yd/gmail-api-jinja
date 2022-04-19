@@ -132,8 +132,8 @@ def create_all_messages(sender, subject, parameters, html_text, no_html_text, pi
     # Loop through all receivers creating one message for each
     for user in parameters:
         email = user['email']
-        name = user['name']
-        age = str(user['age'])
+        # name = user['name']
+        # age = str(user['age'])
 
         # Templating HTML with params and pixelURL variables
         html_tm = Template(html_text)
@@ -141,7 +141,7 @@ def create_all_messages(sender, subject, parameters, html_text, no_html_text, pi
         html = html_tm.render(**user, pixelURL_tracker=pixelURL_tracker)
 
         no_html_tm = Template(no_html_text)
-        no_html = no_html_tm.render(name=name, age=age)  # A true no_html email can't be tracked because it's just text. Need hybrid email.
+        no_html = no_html_tm.render(**user)  # A true no_html email can't be tracked because it's just text. Need hybrid email.
 
         # Create message
         if attachments is None:

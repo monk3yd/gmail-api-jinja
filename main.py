@@ -10,15 +10,18 @@ from utils import open_template
 
 
 def main():
-    # Email content (mandatory)
-    parameters = [  # Ideally imported from csv file or db. element keys represents columns, each element in list represents a row
-        {
-            'email': 'monk3yd.thelab@yahoo.com',
-            'name': 'John Doe',
-            'age': 28,
-        },
+    # Email content (mandatory)  # Ideally imported from csv file or db.
+    # Element keys represents columns, each dict in list represents a row (element)
+    # Element keys represent the variables in the HTML jinja template, except for email (default)
+    parameters = [  
         {
             'email': 'monk3yd.thelab@gmail.com',
+            'name': 'John Doe',
+            'age': 28,
+            'testing': 'Testing this program with multiple variables'
+        },
+        {
+            'email': 'monk3yd.thelab@yahoo.com',
             'name': 'Walter White',
             'age': 64,
         },

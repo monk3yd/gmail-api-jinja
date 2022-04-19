@@ -32,6 +32,9 @@
         <li>One</li>
         <li>Two</li>
         <li>Three</li>
+        {% if testing: %}
+            <li>{{ testing }}</li>
+        {% endif %}
     </ul>
     <img src='{{ pixelURL_tracker }}'>
 </body>
