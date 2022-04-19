@@ -1,4 +1,3 @@
-from email.mime.application import MIMEApplication
 import os.path
 import urllib.parse
 
@@ -17,6 +16,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.image import MIMEImage
 from email.mime.audio import MIMEAudio
+from email.mime.application import MIMEApplication
 from email.mime.base import MIMEBase
 from mimetypes import guess_type as guess_mime_type
 
@@ -58,6 +58,17 @@ def open_template(template_path):
     with open(template_path, "r") as file:
         template = file.read()
         return template
+
+
+def load_attachments(attachments_dir_path):
+    """
+        Input: attachments directory Path.
+        It loads all files and directories contained in the attachments folder.
+        Returns: all files in specified dir path, exluding dirs(? Need testing)
+    """
+    attachments_paths = attachments_dir_path.glob("**/*")
+    attachments = [element for element in attachments_paths if element.is_file()]
+    return attachments
 
 
 def create_pixelURL_tracker(google_tracker):
@@ -132,8 +143,6 @@ def create_all_messages(sender, subject, parameters, html_text, no_html_text, pi
     # Loop through all receivers creating one message for each
     for user in parameters:
         email = user['email']
-        # name = user['name']
-        # age = str(user['age'])
 
         # Templating HTML with params and pixelURL variables
         html_tm = Template(html_text)

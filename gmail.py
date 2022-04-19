@@ -17,6 +17,7 @@ class Email():
         # Call the Gmail API
         self.service = gmail_authenticate()
 
+        # If tracker was setup, create pixelURL_tracker
         if google_tracker is not None:
             # Setup trackable pixelURL
             self.pixelURL_tracker = create_pixelURL_tracker(google_tracker)
