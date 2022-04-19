@@ -104,7 +104,7 @@ def create_message_with_attachment(sender, receiver, subject, html, files):
     # message.attach(MIMEText(text, 'plain'))
     message.attach(MIMEText(html, 'html'))
 
-    # TODO Add all attached files into message
+    # Add all attached files into message
     for file in files:
         content_type, encoding = guess_mime_type(file)
 
