@@ -37,7 +37,7 @@ def main():
     # Email content (optional)
     no_html_text = open_template(Path("templates/template.txt"))
 
-    # Load all attachments from attachments directory
+    # TODO Load all attachments from attachments directory, export to function
     attachments_path = Path("attachments").glob("**/*")
     attachments = [element for element in attachments_path if element.is_file()]
 

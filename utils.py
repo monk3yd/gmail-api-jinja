@@ -17,6 +17,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.image import MIMEImage
 from email.mime.audio import MIMEAudio
+from email.mime.application import MIMEApplication
 from email.mime.base import MIMEBase
 from mimetypes import guess_type as guess_mime_type
 
@@ -88,10 +89,9 @@ def create_message_with_attachment(sender, receiver, subject, html, files):
     message['to'] = receiver
     message['subject'] = subject
 
-    # message.attach(MIMEText(text, 'plain'))
     message.attach(MIMEText(html, 'html'))
 
-    # TODO Add all attached files into message
+    # Add all attached files into message
     for file in files:
         content_type, encoding = guess_mime_type(file)
 
