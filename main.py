@@ -1,53 +1,28 @@
-# Project: Send Email via Gmail API (business) with HTML Templates (jinja2) using Python
+# Project: Python library that sends Email via Gmail API. May use HTML Templates (that supports jinja2 syntax)
 
-from __future__ import print_function  # ??
-
+import pandas as pd
 from pathlib import Path
 
-# Own classes and functions
+# My libraries
 from gmail import Email
-from utils import open_template
+from utils import open_template, load_attachments, setup_gtracker
 
 
 def main():
-    # Email content (mandatory)
-    parameters = [  # Ideally imported from csv file or db. element keys represents columns, each element in list represents a row
-        {
-            'email': 'monk3yd.thelab@yahoo.com',
-            'name': 'John Doe',
-            'age': 28,
-        },
-        {
-            'email': 'monk3yd.thelab@gmail.com',
-            'name': 'Walter White',
-            'age': 64,
-        },
-        {
-            'email': 'monk3yd.thelab@protonmail.com',
-            'name': 'Kvothe Kingkiller',
-            'age': 37,
-        }
-    ]
+    # Load parameters data in csv file into pandas dataframe
+    df = pd.read_csv(Path("data.csv")).fillna("")  # Clean data - replace NaN values for empty strings
 
-    sender = 'monk3yd.thelab@gmail.com'
-    receivers = [user['email'] for user in parameters]  # Isn't necessary if email is included in parameters
-    subject = 'Project: Send Email via Gmail API with HTML Templates (jinja2) using Python'
+    # Email contents
+    parameters = df.to_dict(orient="records")  # Convert dataframe to list of dicts, element keys represent the variables names that can be used in the HTML jinja template 
+    sender = "monk3yd.thelab@gmail.com"
+    receivers = [user["email"] for user in parameters]  # Isn't necessary if email is included in parameters
+    subject = "Project: Send Email via Gmail API with HTML Templates (jinja2) using Python"
     html_text = open_template(Path("templates/template.html"))
 
-    # Email content (optional)
+    # Optional email contents
     no_html_text = open_template(Path("templates/template.txt"))
-
-    # TODO Load all attachments from attachments directory, export to function
-    attachments_path = Path("attachments").glob("**/*")
-    attachments = [element for element in attachments_path if element.is_file()]
-
-    google_tracker = {
-        'tracking_id': 'UA-226021269-1',
-        'client_id': 555,  # anonymous  # Hardcode?
-        'anonymize_ip': 1,  # 1=enable  # Hardcode?
-        'tracker_path': '/email/tracker',  # Hardcode?
-        'tracker_title': 'My Email Tracker'  # Hardcode?
-    }
+    attachments = load_attachments(Path("attachments"))
+    google_tracker = setup_gtracker(tracking_id="UA-226021269-1")  # Setup trackable pixelURL
 
     # Create email
     new_email = Email(
@@ -65,13 +40,5 @@ def main():
     new_email.send()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
-
-# https://developers.google.com/gmail/api/quickstart/python
-# https://www.thepythoncode.com/article/use-gmail-api-in-python#Enabling_Gmail_API
-# https://developers.google.com/gmail/api/guides/sending
-# https://stackoverflow.com/questions/37201250/sending-email-via-gmail-python
-# https://zetcode.com/python/jinja/
-# https://htmlemail.io/blog/google-analytics-email-tracking
-# https://learndataanalysis.org/how-to-use-gmail-api-to-send-an-email-with-attachments-in-python/
